@@ -1,5 +1,7 @@
-@extends('admin.template.main')
-@section('title','Admin')
+@extends('client.template.main')
+@section('title','Home')
+
+
 
 @section('content')
     <p> proyecto workout</p>
