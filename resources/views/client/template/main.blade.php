@@ -7,7 +7,7 @@
     <title>Workout - @yield('title','default') | Panel de administración</title>
 
     <body>
-
+    
         @yield('navbar')
 
 
