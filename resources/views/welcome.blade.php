@@ -2,7 +2,6 @@
 @section('title','Home')
 
 @section('navbar')
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -32,7 +31,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">FAQ</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Administrador</a>
+                </li>
             </ul>
+                    
+                        <a class="sesion" href="#">Login</a>
+                        <a class="sesion" href="#">Sign in</a>
+                    
     
         </div>
     </nav>
