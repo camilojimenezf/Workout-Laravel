@@ -12,3 +12,16 @@ header {
     color: slategray;
     text-decoration: none;
 }
+
+.register {
+    padding-top: 20px;
+    margin: auto;
+}
+
+.container {
+    margin: auto;
+}
+
+.label {
+    text-size-adjust: 14px;
+}
