@@ -8,11 +8,16 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
-                    @if (session('status'))
+                    @auth
                         <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+                            {{ auth()->user()->name }}
                         </div>
-                    @endif
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+                    @endauth
 
                     You are logged in!
                 </div>
