@@ -12,11 +12,7 @@
                         <div class="alert alert-success" role="alert">
                             {{ auth()->user()->name }}
                         </div>
-                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
+
                     @endauth
 
                     You are logged in!
