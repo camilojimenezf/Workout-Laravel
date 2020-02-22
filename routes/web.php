@@ -16,5 +16,6 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
+//Route::get('/athlete/create','AthleteController@redirectCreate')->name('athlete');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('athlete','AthleteController');
