@@ -1,4 +1,4 @@
-        
+
         
      {{$mode=='create' ? 'add athlete':'update athlete'}}
      <div class="form-group">

@@ -14,7 +14,7 @@
 Route::get('/', function () {
     return view('home');
 });
-Auth::routes();
+Auth::routes(['register'=>false,'reset'=>false]);
 
 Route::resource('athlete','AthleteController');
 
