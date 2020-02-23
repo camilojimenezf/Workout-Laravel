@@ -16,5 +16,5 @@ Route::get('/', function () {
 });
 Auth::routes(['register'=>false,'reset'=>false]);
 
-Route::resource('athlete','AthleteController');
+Route::resource('athlete','AthleteController')->middleware( 'auth' );
 
