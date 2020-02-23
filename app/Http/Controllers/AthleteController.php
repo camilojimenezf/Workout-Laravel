@@ -36,7 +36,7 @@ class AthleteController extends Controller{
             'points'=>$request->get('points') 
         ]);
         $Athlete->save();
-       return view('athlete.index')->with('message','Guardado Satisfactoriamente !');
+       return redirect('athlete')->with('message','Guardado Satisfactoriamente !');
 
     }
     public function edit($id)
@@ -58,7 +58,7 @@ class AthleteController extends Controller{
         $athlete->save();
     
        // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('/athlete')->with('success', 'athletes updated!');
+        return redirect('athlete')->with('success', 'athletes updated!');
     }
      public function destroy($id){
          Athlete::destroy($id);

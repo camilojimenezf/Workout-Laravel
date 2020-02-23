@@ -1,5 +1,7 @@
-inicio, despliegue de datos
+inicio, despliegue de datos @if(Session::has('message')){{ Session::get('message') }} @endif
 
+
+<a href="{{route('athlete.create')}}" class="btn btn-primary">agregar</a>
 <table class="table table-light">
     <thead class="thead-light">
         <tr>
@@ -22,10 +24,9 @@ inicio, despliegue de datos
                 <a href="{{ route('athlete.edit',$athlete->id)}}" class="btn btn-primary">Edit</a>
             </td>
             <td>
-            <form action="{{ route('athlete.destroy', $athlete->id)}}" method="post">
-                  @csrf
-                  @method('DELETE')
-                  <button class="btn btn-danger" type="submit" onclick="return confirm('¿borrar?')">Delete</button>
+                <form action="{{ route('athlete.destroy', $athlete->id)}}" method="post">
+                    @csrf @method('DELETE')
+                    <button class="btn btn-danger" type="submit" onclick="return confirm('¿borrar?')">Delete</button>
                 </form>
             </td>
         </tr>
