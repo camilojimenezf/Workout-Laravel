@@ -18,4 +18,4 @@ Auth::routes(['register'=>false,'reset'=>false]);
 
 Route::resource('athlete','AthleteController')->middleware( 'auth' );
 Route::resource('plan','PlanController')->middleware( 'auth' );
-
+Route::resource('profile','ProfileController')->middleware( 'auth' );

@@ -43,6 +43,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('plan.index') }}">{{ __('Plans') }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('profile.index') }}">{{ __('Profiles') }}</a>
+                        </li>
 
                     </ul>
 
