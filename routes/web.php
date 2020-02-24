@@ -24,3 +24,4 @@ Route::resource('routine','RoutineController')->middleware( 'auth' );
 Route::resource('training','TrainingController')->middleware( 'auth' );
 
 
+

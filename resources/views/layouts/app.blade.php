@@ -49,6 +49,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('trainer.index') }}">{{ __('Trainers') }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('training.index') }}">{{ __('trainings') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('routine.index') }}">{{ __('Routines') }}</a>
+                        </li>
 
                     </ul>
 
