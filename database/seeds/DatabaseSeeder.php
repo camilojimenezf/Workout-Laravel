@@ -8,6 +8,7 @@ use App\Plan;
 use App\Subscription;
 use App\TrainerPlan;
 use App\Profile;
+use App\Routine;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,8 +27,10 @@ class DatabaseSeeder extends Seeder
         Subscription::truncate();
         TrainerPlan::truncate();
         Profile::truncate();
+        Routine::truncate();
 
         $cantidad_users = 100;
+        $cantidad_routines = 100;
         $cantidad_athletes = 80;
         $cantidad_trainers = 20;
         $cantidad_profiles = 200;
@@ -40,6 +43,7 @@ class DatabaseSeeder extends Seeder
         factory(Trainer::class, $cantidad_trainers)->create();
         factory(Profile::class, $cantidad_profiles)->create();
         factory(Plan::class, $cantidad_plans)->create();
+        factory(Routine::class, $cantidad_routines)->create();
         factory(Subscription::class, $cantidad_subscriptions)->create();
         factory(TrainerPlan::class, $cantidad_trainer_plans)->create();
 

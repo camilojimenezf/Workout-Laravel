@@ -20,7 +20,7 @@
 <div class="form-group">
     <label for="description" class="control-label">Description </label>
     <input type="text" class="form-control {{$errors->has('description')?'is-invalid':''}} " id="description" name="description" value="{{isset($trainer->description)?$trainer->description:old('description')}}"> 
-    {!!$errors->first('body_fat','<div class="invalid-feedback">:message</div>')!!}
+    {!!$errors->first('description','<div class="invalid-feedback">:message</div>')!!}
 </div>
 
 <input type="submit" class="btn btn-success" value="{{$mode=='create'? 'Agregar':'Modificar'}}">

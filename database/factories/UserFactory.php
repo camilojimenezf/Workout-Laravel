@@ -9,6 +9,7 @@ use App\Plan;
 use App\Subscription;
 use App\TrainerPlan;
 use App\Profile;
+use App\Routine;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -83,5 +84,13 @@ $factory->define(Profile::class, function (Faker $faker) {
         'weight' => $faker->randomDigit,
         'height' => $faker->randomDigit,
         'body_fat' => $faker->randomDigit
+    ];
+});
+$factory->define(Routine::class, function (Faker $faker) {
+    return [
+        'title' => $faker->word,
+        'description' => $faker->word,
+        'duration' => $faker->word,
+        'frequency' => $faker->word
     ];
 });

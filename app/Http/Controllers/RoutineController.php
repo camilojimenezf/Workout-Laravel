@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Trainer;
+use App\Http\Controllers\Controller;
+use App\Routine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use DB;
+use Input;
+use Storage;
 
-class TrainerController extends Controller
+class RoutineController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +18,8 @@ class TrainerController extends Controller
      */
     public function index()
     {
-        $trainers =Trainer::all();
-        return view('trainer.index', compact('trainers'));//
+        $routines=Routine::all();
+        return view('routine.index',compact('routines'));
     }
 
     /**
@@ -25,7 +29,7 @@ class TrainerController extends Controller
      */
     public function create()
     {
-        return view('trainer.create');
+        return view('routine.create');
     }
 
     /**
@@ -36,26 +40,31 @@ class TrainerController extends Controller
      */
     public function store(Request $request)
     {
-      //  $dataTrainer=$request->except('_token');
+       // $dataroutine=$request->except('_token');
         $message=["required"=>'El: atribute es requerido'];
         $request->validate([
-            'user_id'=>'required',
-            'certification'=>'required',
-            'score'=>'required',
-            'description'=>'required'
+            'title'=>'required',
+            'description'=>'required',
+            'duration'=>'required',
+            'frequency'=>'required'
         ],$message);
         
-        $Trainer=new Trainer([
-            'user_id'=>$request->get('user_id'),
-            'certification'=>$request->get('certification'),
-            'score'=>$request->get('score'),
+        $Routine=new Routine([
+            'title'=>$request->get('title'),
             'description'=>$request->get('description'),
+            'duration'=>$request->get('duration'),
+            'frequency'=>$request->get('frequency'),
         ]);
-        $Trainer->save();
-       return redirect('trainer')->with('message','Guardado Satisfactoriamente');
+        $Routine->save();
+       return redirect('/routine')->with('message','Guardado Satisfactoriamente');
     }
 
-   
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
         //
@@ -69,8 +78,8 @@ class TrainerController extends Controller
      */
     public function edit($id)
     {
-        $trainers = Trainer::find($id);
-        return view('trainer.edit',['trainer'=>$trainers]);
+        $routines = Routine::find($id);
+        return view('routine.edit',['routine'=>$routines]);
     }
 
     /**
@@ -84,33 +93,34 @@ class TrainerController extends Controller
     {
         $message=["required"=>'El: atribute es requerido'];
         $request->validate([
-            'user_id'=>'required',
-            'certification'=>'required',
-            'score'=>'required',
-            'description'=>'required'
+            'title'=>'required',
+            'description'=>'required',
+            'duration'=>'required',
+            'frequency'=>'required'
         ],$message);
-        $trainer=Trainer::find($id);
-        $trainer->user_id = $request->user_id;
-        $trainer->certification = $request->certification;
-        $trainer->score = $request->score;
-        $trainer->description = $request->description;
+        $routine=Routine::find($id);
+        $routine->title = $request->title;
+        $routine->description = $request->description;
+        $routine->duration = $request->duration;
+        $routine->frequency = $request->frequency;
          
-        $trainer->save();
+        $routine->save();
     
        // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('trainer')->with('message', 'Modificado Satisfactoriamente !');
-    }
-
+        return redirect('routine')->with('message', 'Modificado Satisfactoriamente !');
+        
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    }
     public function destroy($id)
+
     {
-        Trainer::destroy($id);
-        return redirect('trainer')->with('message', 'trainer deleted!');
+        Routine::destroy($id);
+        return redirect('routine')->with('message', 'routine deleted!');
 
     }
 }

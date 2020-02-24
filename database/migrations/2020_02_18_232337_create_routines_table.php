@@ -15,6 +15,10 @@ class CreateRoutinesTable extends Migration
     {
         Schema::create('routines', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('title');
+            $table->string('description'); /**0 al 100 */
+            $table->string('duration');
+            $table->string('frequency');
             $table->timestamps();
         });
     }
