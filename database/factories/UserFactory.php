@@ -10,6 +10,7 @@ use App\Subscription;
 use App\TrainerPlan;
 use App\Profile;
 use App\Routine;
+use App\Training;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -92,5 +93,12 @@ $factory->define(Routine::class, function (Faker $faker) {
         'description' => $faker->word,
         'duration' => $faker->word,
         'frequency' => $faker->word
+    ];
+});
+$factory->define(Training::class, function (Faker $faker) {
+    return [
+        'title' => $faker->word,
+        'description' => $faker->word,
+        'duration' => $faker->word,
     ];
 });

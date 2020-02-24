@@ -15,10 +15,12 @@ Route::get('/', function () {
     return view('home');
 });
 Auth::routes(['register'=>false,'reset'=>false]);
-
+//Auth::routes();
 Route::resource('athlete','AthleteController')->middleware( 'auth' );
 Route::resource('plan','PlanController')->middleware( 'auth' );
 Route::resource('profile','ProfileController')->middleware( 'auth' );
 Route::resource('trainer','TrainerController')->middleware( 'auth' );
 Route::resource('routine','RoutineController')->middleware( 'auth' );
+Route::resource('training','TrainingController')->middleware( 'auth' );
+
 
