@@ -37,6 +37,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                    @auth
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('athlete.index') }}">{{ __('Athletes') }}</a>
                         </li>
@@ -57,6 +58,28 @@
                         </li>
 
                     </ul>
+                    @else
+
+                     <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Acerca de') }}</a>
+                    </li>
+                
+                     <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Clases') }}</a>
+                    </li>
+                     <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Entrenadores') }}</a>
+                    </li>
+                     <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Planes') }}</a>
+                    </li>
+                    <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Blog') }}</a>
+                    </li>
+                 
+
+
+                    @endguest
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -70,13 +93,8 @@
                             <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                         </li>
                         @endif @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                        <li class="nav-item">
+                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
@@ -85,8 +103,6 @@
                                     @csrf
                                 </form>
 
-
-                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('athlete.index')}}">{{ __('Admin') }}</a>
