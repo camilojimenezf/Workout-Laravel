@@ -7,13 +7,20 @@ use Illuminate\Http\Request;
 
 class TrainerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $request->user()->authorizeRoles(['user', 'admin']);
+
         $trainers =Trainer::all();
         return view('trainer.index', compact('trainers'));//
     }

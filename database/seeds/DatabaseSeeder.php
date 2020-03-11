@@ -9,6 +9,8 @@ use App\Plan;
 use App\Subscription;
 use App\TrainerPlan;
 use App\Profile;
+use App\Role;
+use App\RoleUser;
 use App\Routine;
 use App\Training;
 use App\TrainingRoutine;
@@ -48,6 +50,7 @@ class DatabaseSeeder extends Seeder
         $cantidad_trainings = 150;
         $cantidad_calendars = 300;
         $cantidad_training_routines = 150;
+        $cantidad_role_user = 100;
 
         factory(User::class, $cantidad_users)->create();
         factory(Athlete::class, $cantidad_athletes)->create();
@@ -61,6 +64,20 @@ class DatabaseSeeder extends Seeder
         factory(Training::class, $cantidad_trainings)->create();
         factory(Calendar::class, $cantidad_calendars)->create();
         factory(TrainingRoutine::class, $cantidad_training_routines)->create();
+        //crear roles
+        $role = new Role();
+        $role->name = 'admin';
+        $role->description = 'Administrator';
+        $role->save();
+        $role = new Role();
+        $role->name = 'athlete';
+        $role->description = 'athlete';
+        $role->save();
+        $role = new Role();
+        $role->name = 'trainer';
+        $role->description = 'trainer';
+        $role->save();
+        factory(RoleUser::class, $cantidad_role_user)->create();
 
     }
 

@@ -10,12 +10,16 @@ use DB;
 use Input;
 use Storage;
 class AthleteController extends Controller{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     
-    public function index(){
-        $athletes=Athlete::all();
-    
-         return view ('athlete.index',compact('athletes'));
+    public function index(Request $request){
+        $request->user()->authorizeRoles(['user', 'admin']);
 
+        $athletes=Athlete::all();
+        return view ('athlete.index',compact('athletes'));
     }
 
     public function create(){
