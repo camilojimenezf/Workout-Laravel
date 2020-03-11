@@ -31,6 +31,8 @@ class RegisterController extends Controller
      */
     protected $redirectTo = "/";
 
+    
+
     /**
      * Create a new controller instance.
      *
@@ -66,12 +68,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
-            'surname' => $data['surname'],
             'email' => $data['email'],
-            'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
         ]);
+       $user->roles()->attach(Role::where('name', 'user')->first());
+       return $user;
     }
 }
