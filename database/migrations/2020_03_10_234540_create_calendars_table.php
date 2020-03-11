@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoutinesTable extends Migration
+class CreateCalendarsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateRoutinesTable extends Migration
      */
     public function up()
     {
-        Schema::create('routines', function (Blueprint $table) {
+        Schema::create('calendars', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title');
-            $table->string('description');
-            $table->integer('duration'); // duration in days
-            $table->integer('frequency'); //training x week
-            $table->string('goal');
+            $table->integer('athlete_id');
+            $table->integer('training_id');
+            $table->date('start');
+            $table->date('end');
+            $table->string('observation');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateRoutinesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('routines');
+        Schema::dropIfExists('calendars');
     }
 }

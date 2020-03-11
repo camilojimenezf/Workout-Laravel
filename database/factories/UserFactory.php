@@ -4,11 +4,15 @@
 
 use App\User;
 use App\Athlete;
+use App\Calendar;
 use App\Trainer;
 use App\Plan;
 use App\Subscription;
 use App\TrainerPlan;
 use App\Profile;
+use App\Routine;
+use App\Training;
+use App\TrainingRoutine;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -83,5 +87,40 @@ $factory->define(Profile::class, function (Faker $faker) {
         'weight' => $faker->randomDigit,
         'height' => $faker->randomDigit,
         'body_fat' => $faker->randomDigit
+    ];
+});
+
+$factory->define(Routine::class, function (Faker $faker) {
+    return [
+        'title' => $faker->randomElement(['Rutina Volumen', 'Rutina acondicionamiento aerobico', 'Rutina definicion']),
+        'description' => $faker->text(100),
+        'duration' => $faker->randomElement([30, 45, 60, 90, 120, 150, 180, 360]),
+        'frequency' => $faker->randomElement([2, 3, 4, 5, 6, 7]),
+        'goal' => $faker->text(50)
+    ];
+});
+
+$factory->define(Training::class, function (Faker $faker) {
+    return [
+        'title' => $faker->randomElement(['Aleman 10x10', 'Box jumps and squats', 'Trote en intervalos', 'Empujes', 'Pierna zancadas y sentadillas', 'Pecho y hombros']),
+        'description' => $faker->text(100),
+        'duration' => $faker->randomElement([30, 45, 60, 90, 120, 150, 180]),
+    ];
+});
+
+$factory->define(TrainingRoutine::class, function (Faker $faker) {
+    return [
+        'training_id' => Training::all()->random()->id,
+        'routine_id' => Routine::all()->random()->id,
+    ];
+});
+
+$factory->define(Calendar::class, function (Faker $faker) {
+    return [
+        'athlete_id' => Athlete::all()->random()->id,
+        'training_id' => Training::all()->random()->id,
+        'start' => $faker->date(),
+        'end' => $faker->date(),
+        'observation' => $faker->text(100),
     ];
 });

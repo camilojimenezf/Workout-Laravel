@@ -24,4 +24,9 @@ class Athlete extends Model
         return $this->belongsToMany('App\Plan')->using('App\Subscription');
     }
 
+    public function trainings()
+    {
+        return $this->belongsToMany('App\Training')->using('App\Calendar');
+    }
+
 }
