@@ -10,6 +10,8 @@ use App\Plan;
 use App\Subscription;
 use App\TrainerPlan;
 use App\Profile;
+use App\Role;
+use App\RoleUser;
 use App\Routine;
 use App\Training;
 use App\TrainingRoutine;
@@ -122,5 +124,12 @@ $factory->define(Calendar::class, function (Faker $faker) {
         'start' => $faker->date(),
         'end' => $faker->date(),
         'observation' => $faker->text(100),
+    ];
+});
+
+$factory->define(RoleUser::class, function (Faker $faker) {
+    return [
+        'role_id' => Role::all()->random()->id,
+        'user_id' => User::all()->random()->id,
     ];
 });
