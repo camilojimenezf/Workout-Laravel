@@ -16,13 +16,8 @@ class CreateTrainingsTable extends Migration
         Schema::create('trainings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
-<<<<<<< HEAD
-            $table->string('description'); /**0 al 100 */
-            $table->string('duration');
-=======
             $table->string('description');
             $table->integer('duration'); //duration in minutes
->>>>>>> 189a7d722d689b6b6954c9a6a05cdc68b71ba90a
             $table->timestamps();
         });
     }
