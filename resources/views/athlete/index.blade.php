@@ -11,15 +11,16 @@
     @endif
 
 
-    <a href="{{route('athlete.create')}}" class="btn btn-success">agregar</a>
+    <a href="{{route('athlete.create')}}" class="btn btn-success">Add</a>
+    <br> </br>
     <table class="table table-light table-hover">
         <thead class="thead-light">
             <tr>
                 <th>#</th>
-                <th>Nombre</th>
+                <th>ID User</th>
                 <th>Level</th>
-                <th>Puntos</th>
-                <th>Acciones</th>
+                <th>Point</th>
+                <th>Actions</th>
 
             </tr>
         </thead>
@@ -36,7 +37,7 @@
 
                     <form action="{{ route('athlete.destroy', $athlete->id)}}" method="post">
                         @csrf @method('DELETE')
-                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿borrar?')">Delete</button>
+                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Are you sure you want to delete it?')">Delete</button>
                     </form>
                    
                    </div>

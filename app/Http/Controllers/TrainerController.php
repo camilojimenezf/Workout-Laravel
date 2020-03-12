@@ -43,8 +43,8 @@ class TrainerController extends Controller
      */
     public function store(Request $request)
     {
-      //  $dataTrainer=$request->except('_token');
-        $message=["required"=>'El: atribute es requerido'];
+        $dataTrainer=$request->except('_token');
+        $message=["required"=>'Attribute is required'];
         $request->validate([
             'user_id'=>'required',
             'certification'=>'required',
@@ -59,7 +59,7 @@ class TrainerController extends Controller
             'description'=>$request->get('description'),
         ]);
         $Trainer->save();
-       return redirect('trainer')->with('message','Guardado Satisfactoriamente');
+       return redirect('trainer')->with('message','Saved Successfully ');
     }
 
    
@@ -89,7 +89,7 @@ class TrainerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $message=["required"=>'El: atribute es requerido'];
+        $message=["required"=>'Attribute is required'];
         $request->validate([
             'user_id'=>'required',
             'certification'=>'required',
@@ -105,7 +105,7 @@ class TrainerController extends Controller
         $trainer->save();
     
        // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('trainer')->with('message', 'Modificado Satisfactoriamente !');
+        return redirect('trainer')->with('message', 'Successfully modified !');
     }
 
     /**
@@ -117,7 +117,7 @@ class TrainerController extends Controller
     public function destroy($id)
     {
         Trainer::destroy($id);
-        return redirect('trainer')->with('message', 'trainer deleted!');
+        return redirect('trainer')->with('message', 'Trainer Deleted!');
 
     }
 }

@@ -11,16 +11,17 @@
     @endif
 
 
-    <a href="{{route('profile.create')}}" class="btn btn-success">agregar</a>
+    <a href="{{route('profile.create')}}" class="btn btn-success">Add</a>
+    <br> </br>
     <table class="table table-light table-hover">
         <thead class="thead-light">
             <tr>
                 <th>#</th>
                 <th>Athlete id</th>
-                <th>weight</th>
-                <th>height</th>
-                <th>body_fat</th>
-                <th>actions</th>
+                <th>Weight</th>
+                <th>Height</th>
+                <th>Body Fat</th>
+                <th>Actions</th>
 
             </tr>
         </thead>
@@ -38,7 +39,7 @@
 
                     <form action="{{ route('profile.destroy', $profile->id)}}" method="post">
                         @csrf @method('DELETE')
-                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿borrar?')">Delete</button>
+                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Are you sure you want to delete it?')">Delete</button>
                     </form>
                    
                    </div>

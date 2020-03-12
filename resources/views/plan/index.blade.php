@@ -11,14 +11,15 @@
     @endif
 
 
-    <a href="{{route('plan.create')}}" class="btn btn-success">agregar</a>
+    <a href="{{route('plan.create')}}" class="btn btn-success">Add</a>
     <table class="table table-light table-hover">
+    <br> </br>
         <thead class="thead-light">
             <tr>
                 <th>#</th>
                 <th>Name</th>
                 <th>Price</th>
-                <th>Acciones</th>
+                <th>Actions</th>
 
             </tr>
         </thead>
@@ -34,7 +35,7 @@
 
                     <form action="{{ route('plan.destroy', $plan->id)}}" method="post">
                         @csrf @method('DELETE')
-                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿borrar?')">Delete</button>
+                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Are you sure you want to delete it?')">Delete</button>
                     </form>
                    
                    </div>

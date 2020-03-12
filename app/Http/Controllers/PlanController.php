@@ -43,7 +43,7 @@ class PlanController extends Controller
     public function store(Request $request)
     {
         $dataPlans=$request->except('_token');
-        $message=["required"=>'El: atribute es requerido'];
+        $message=["required"=>'Attribute is required'];
         $request->validate([
             'name'=>'required',
             'price'=>'required',
@@ -54,7 +54,7 @@ class PlanController extends Controller
             'price'=>$request->get('price'),
         ]);
         $Plan->save();
-       return redirect('plan')->with('message','Guardado Satisfactoriamente !');
+       return redirect('plan')->with('message','Saved Successfully !');
     }
 
     /**
@@ -83,7 +83,7 @@ class PlanController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id){
-        $message=["required"=>'El: atribute es requerido'];
+        $message=["required"=>'Attribute is required'];
         $request->validate([
             'name'=>'required',
             'price'=>'required',
@@ -95,7 +95,7 @@ class PlanController extends Controller
         $plan->save();
     
        // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('plan')->with('message', 'Modificado Satisfactoriamente !');
+        return redirect('plan')->with('message', 'Successfully modified!');
     }
 
     /**
@@ -106,6 +106,6 @@ class PlanController extends Controller
      */
     public function destroy($id){
         Plan::destroy($id);
-       return redirect('plan')->with('message', 'plan deleted!');
+       return redirect('plan')->with('message', 'Plan deleted!');
    }
 }

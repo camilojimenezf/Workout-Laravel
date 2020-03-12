@@ -1,5 +1,6 @@
 
-{{$mode=='create' ? 'add plan':'update plan'}}
+{{$mode=='create' ? 'ADD PLAN':'UPDATE PLAN'}}
+<br> </br>
 <div class="form-group">
     <label for="name" class="control-label">Name </label>
     <input type="text" class="form-control {{$errors->has('name')?'is-invalid':''}} " id="name" name="name" value="{{isset($plan->name)?$plan->name:old('name')}}"> 
@@ -13,5 +14,5 @@
 
 </div>
 
-<input type="submit" class="btn btn-success" value="{{$mode=='create'? 'Agregar':'Modificar'}}">
-<a type="" class="btn btn-primary" href="{{url('plan')}}">Volver</a>
+<input type="submit" class="btn btn-success" value="{{$mode=='create'? 'ADD':'Update'}}">
+<a type="" class="btn btn-primary" href="{{url('plan')}}">Back</a>

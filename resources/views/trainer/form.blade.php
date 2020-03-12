@@ -1,5 +1,6 @@
 
-{{$mode=='create' ? 'add trainer':'update trainer'}}
+{{$mode=='create' ? 'ADD TRAINER':'UPDATE TRAINER'}}
+<br> </br>
 <div class="form-group">
     <label for="user_id" class="control-label">User_id </label>
     <input type="text" class="form-control {{$errors->has('user_id')?'is-invalid':''}} " id="user_id" name="user_id" value="{{isset($trainer->user_id)?$trainer->user_id:old('user_id')}}"> 
@@ -23,5 +24,5 @@
     {!!$errors->first('description','<div class="invalid-feedback">:message</div>')!!}
 </div>
 
-<input type="submit" class="btn btn-success" value="{{$mode=='create'? 'Agregar':'Modificar'}}">
-<a type="" class="btn btn-primary" href="{{url('trainer')}}">Volver</a>
+<input type="submit" class="btn btn-success" value="{{$mode=='create'? 'Add':'Update'}}">
+<a type="" class="btn btn-primary" href="{{url('trainer')}}">Back</a>
