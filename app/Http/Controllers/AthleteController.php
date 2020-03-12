@@ -16,7 +16,7 @@ class AthleteController extends Controller{
     }
     
     public function index(Request $request){
-        $request->user()->authorizeRoles(['user', 'admin']);
+        $request->user()->authorizeRoles(['user', 'admin','athlete']);
 
         $athletes=Athlete::all();
         return view ('athlete.index',compact('athletes'));

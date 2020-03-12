@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
         factory(Routine::class, $cantidad_routines)->create();
         factory(Training::class, $cantidad_trainings)->create();
         factory(Calendar::class, $cantidad_calendars)->create();
-        factory(TrainingRoutine::class, $cantidad_training_routines)->create();
+       // factory(TrainingRoutine::class, $cantidad_training_routines)->create();
         //crear roles
         $role = new Role();
         $role->name = 'admin';
@@ -78,8 +78,33 @@ class DatabaseSeeder extends Seeder
         $role->description = 'trainer';
         $role->save();
         factory(RoleUser::class, $cantidad_role_user)->create();
+        $role_athlete=Role::where('name','athlete')->first();
+        $role_admin=Role::where('name','admin')->first();
+
+        $user =new User();       
+        $user->name="athlete";
+        $user->surname="user";
+        $user->email="user@mail.com";
+        $user->password=bcrypt('test');
+        $user->phone='12341234';
+        $user->save();
+        $user->roles()->attach($role_athlete);  
+
+        $user =new User();       
+        $user->name="admin";
+        $user->surname="user";
+        $user->email="admin@mail.com";
+        $user->password=bcrypt('test');
+        $user->phone='12341234';
+        $user->save();
+        $user->roles()->attach($role_admin);  
+
+
+
+
 
     }
+    
 
 
 }
