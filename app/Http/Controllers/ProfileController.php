@@ -44,7 +44,7 @@ class ProfileController extends Controller
     public function store(Request $request)
     {
         $dataProfiles=$request->except('_token');
-        $message=["required"=>'El: atribute es requerido'];
+        $message=["required"=>'Attribute is required'];
         $request->validate([
             'athlete_id'=>'required',
             'weight'=>'required',
@@ -59,7 +59,7 @@ class ProfileController extends Controller
             'body_fat'=>$request->get('body_fat'),
         ]);
         $Profile->save();
-       return redirect('profile')->with('message','Guardado Satisfactoriamente !');
+       return redirect('profile')->with('message','Saved Successfully  !');
     }
 
     /**
@@ -94,7 +94,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $message=["required"=>'El: atribute es requerido'];
+        $message=["required"=>'Attribute is required'];
         $request->validate([
             'athlete_id'=>'required',
             'weight'=>'required',
@@ -110,7 +110,7 @@ class ProfileController extends Controller
         $profile->save();
     
        // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('profile')->with('message', 'Modificado Satisfactoriamente !');
+        return redirect('profile')->with('message', 'Successfully modified !');
     }
 
     /**

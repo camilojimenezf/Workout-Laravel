@@ -25,7 +25,7 @@ class AthleteController extends Controller{
     }
     public function store(Request $request){
         $dataAthlete=$request->except('_token');
-        $message=["required"=>'El: atribute es requerido'];
+        $message=["required"=>'Attribute is required'];
         $request->validate([
             'user_id'=>'required',
             'level'=>'required',
@@ -38,7 +38,7 @@ class AthleteController extends Controller{
             'points'=>$request->get('points') 
         ]);
         $Athlete->save();
-       return redirect('athlete')->with('message','Guardado Satisfactoriamente !');
+       return redirect('athlete')->with('message','Satisfactory Saved!');
 
     }
     public function edit($id)
@@ -48,7 +48,7 @@ class AthleteController extends Controller{
     }
 
     public function update(Request $request, $id){
-        $message=["required"=>'El: atribute es requerido'];
+        $message=["required"=>'Attribute is required'];
         $request->validate([
             'user_id'=>'required',
             'level'=>'required',
@@ -61,7 +61,7 @@ class AthleteController extends Controller{
         $athlete->save();
     
        // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('athlete')->with('message', 'Modificado Satisfactoriamente !');
+        return redirect('athlete')->with('message', 'Successfully modified !');
     }
      public function destroy($id){
          Athlete::destroy($id);

@@ -1,4 +1,8 @@
- {{$mode=='create' ? 'add athlete':'update athlete'}}
+ {{$mode=='create' ? 'ADD ATHLETE':'UPDATE ATHLETE'}}
+ 
+ <div>
+    <br>
+ </div>
 <div class="form-group">
     <label for="user_id" class="control-label">User ID </label>
     <input type="text" class="form-control {{$errors->has('user_id')?'is-invalid':''}} " id="user_id" name="user_id" value="{{isset($athlete->user_id)?$athlete->user_id:old('user_id')}}"> 
@@ -17,5 +21,5 @@
      {!!$errors->first('points','<div class="invalid-feedback">:message</div>')!!}
 
 </div>
-<input type="submit" class="btn btn-success" value="{{$mode=='create'? 'Agregar':'Modificar'}}">
-<a type="" class="btn btn-primary" href="{{url('athlete')}}">Volver</a>
+<input type="submit" class="btn btn-success" value="{{$mode=='create'? 'Add':'Update'}}">
+<a type="" class="btn btn-primary" href="{{url('athlete')}}">back</a>

@@ -1,5 +1,6 @@
 
-{{$mode=='create' ? 'add profile':'update profile'}}
+{{$mode=='create' ? 'ADD PROFILE':'UPDATE PROFILE'}}1
+<br> </br>
 <div class="form-group">
     <label for="athlete_id" class="control-label">Athlete_id </label>
     <input type="text" class="form-control {{$errors->has('athlete_id')?'is-invalid':''}} " id="athlete_id" name="athlete_id" value="{{isset($profile->athlete_id)?$profile->athlete_id:old('athlete_id')}}"> 
@@ -7,8 +8,8 @@
 </div>
 <div class="form-group">
     <label for="weight" class="control-label">Weight </label>
-    <input type="text" id="weight" name="weight" value="{{isset($profile->weight)?$profile->weight:old('weight')}}" class="form-control {{$errors->has('weight')?'is-invalid':''}}">
-        {!!$errors->first('weight','<div class="invalid-feedback">:message</div>')!!}
+    <input type="text" class="form-control {{$errors->has('weight')?'is-invalid':''}} " id="weight" name="weight" value="{{isset($profile->weight)?$profile->weight:old('weight')}}">
+    {!!$errors->first('weight','<div class="invalid-feedback">:message</div>')!!}
 
 
 </div>
@@ -23,5 +24,5 @@
     {!!$errors->first('body_fat','<div class="invalid-feedback">:message</div>')!!}
 </div>
 
-<input type="submit" class="btn btn-success" value="{{$mode=='create'? 'Agregar':'Modificar'}}">
-<a type="" class="btn btn-primary" href="{{url('profile')}}">Volver</a>
+<input type="submit" class="btn btn-success" value="{{$mode=='create'? 'Add':'Update'}}">
+<a type="" class="btn btn-primary" href="{{url('profile')}}">Back</a>
