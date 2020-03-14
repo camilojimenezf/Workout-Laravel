@@ -4,16 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Athlete;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use DB;
-use Input;
-use Storage;
-class AthleteController extends Controller{
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+use App\Http\Controllers\ApiController;
+
+class AthleteController extends ApiController{
     
     public function index(Request $request){
         $request->user()->authorizeRoles(['user', 'admin','athlete']);

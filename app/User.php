@@ -4,12 +4,17 @@ namespace App;
 
 use App\Role;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
+    const USUARIO_ADMINISTRADOR = 'ADMIN';
+    const USUARIO_ATHLETE = 'ATHLETE';
+    const USUARIO_TRAINER = 'TRAINER';
 
     /**
      * The attributes that are mass assignable.
@@ -17,8 +22,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','surname','phone'
+        'name', 'email', 'password','surname','phone', 'role'
     ];
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -48,6 +54,7 @@ class User extends Authenticatable
         return $this->hasOne('App\Trainer');
     }
 
+<<<<<<< HEAD
     public function roles()
     {
         return $this->belongsToMany(Role::class)->withTimestamps();
@@ -85,6 +92,8 @@ class User extends Authenticatable
         }
         return false;
     }
+=======
+>>>>>>> master
 
 
 }

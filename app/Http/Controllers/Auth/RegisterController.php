@@ -52,6 +52,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+<<<<<<< HEAD
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'surname' => ['required', 'string', 'max:255'],
@@ -79,5 +80,7 @@ class RegisterController extends Controller
         $role=$data['role'];
        $user->roles()->attach($role);
        return $user;
+=======
+>>>>>>> master
     }
 }

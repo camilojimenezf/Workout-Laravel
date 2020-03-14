@@ -19,6 +19,7 @@ class CreateTrainingsTable extends Migration
             $table->string('description');
             $table->integer('duration'); //duration in minutes
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

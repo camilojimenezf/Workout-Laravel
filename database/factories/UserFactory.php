@@ -10,8 +10,6 @@ use App\Plan;
 use App\Subscription;
 use App\TrainerPlan;
 use App\Profile;
-use App\Role;
-use App\RoleUser;
 use App\Routine;
 use App\Training;
 use Faker\Generator as Faker;
@@ -37,6 +35,7 @@ $factory->define(User::class, function (Faker $faker) {
         'email_verified_at' => now(),
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => Str::random(10),
+        'role' => $faker->randomElement(['TRAINER','ATHLETE','ADMIN']),
     ];
 });
 
@@ -92,6 +91,7 @@ $factory->define(Profile::class, function (Faker $faker) {
 });
 $factory->define(Routine::class, function (Faker $faker) {
     return [
+        'trainer_id' => Trainer::all()->random()->id,
         'title' => $faker->randomElement(['Rutina Volumen', 'Rutina acondicionamiento aerobico', 'Rutina definicion']),
         'description' => $faker->text(100),
         'duration' => $faker->randomElement([30, 45, 60, 90, 120, 150, 180, 360]),
@@ -122,12 +122,5 @@ $factory->define(Calendar::class, function (Faker $faker) {
         'start' => $faker->date(),
         'end' => $faker->date(),
         'observation' => $faker->text(100),
-    ];
-});
-
-$factory->define(RoleUser::class, function (Faker $faker) {
-    return [
-        'role_id' => Role::all()->random()->id,
-        'user_id' => User::all()->random()->id,
     ];
 });

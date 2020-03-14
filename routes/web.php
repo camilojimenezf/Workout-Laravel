@@ -11,6 +11,7 @@
 |
 */
 
+<<<<<<< HEAD
 Route::get('/', function () {
     return view('home');
 });
@@ -25,3 +26,10 @@ Route::resource('training','TrainingController')->middleware( 'auth' );
 
 
 
+=======
+
+/* 
+Route::get('/', function () {
+    return "Api desde laravel";
+}); */
+>>>>>>> master

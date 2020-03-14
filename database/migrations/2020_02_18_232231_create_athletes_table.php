@@ -19,6 +19,7 @@ class CreateAthletesTable extends Migration
             $table->string('level');
             $table->integer('points');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

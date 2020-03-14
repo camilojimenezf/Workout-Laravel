@@ -20,6 +20,7 @@ class CreateTrainersTable extends Migration
             $table->integer('score'); /**0 al 100 */
             $table->string('description');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

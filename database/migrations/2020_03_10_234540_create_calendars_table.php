@@ -21,6 +21,7 @@ class CreateCalendarsTable extends Migration
             $table->date('end');
             $table->string('observation');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
