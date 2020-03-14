@@ -7,9 +7,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class User extends Authenticatable
 {
     use Notifiable;
+    const USUARIO_ADMINISTRADOR = 'ADMIN';
+    const USUARIO_ATHLETE = 'ATHLETE';
+    const USUARIO_TRAINER = 'TRAINER';
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','surname','phone'
+        'name', 'email', 'password','surname','phone', 'role'
     ];
 
     /**
@@ -48,40 +52,6 @@ class User extends Authenticatable
         return $this->hasOne('App\Trainer');
     }
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class)->withTimestamps();
-    }
-
-    public function authorizeRoles($roles)
-    {
-        abort_unless($this->hasAnyRole($roles), 401);
-        return true;
-    }
-
-    public function hasAnyRole($roles)
-    {
-        if (is_array($roles)) {
-            foreach ($roles as $role) {
-                if ($this->hasRole($role)) {
-                    return true;
-                }
-            }
-        } else {
-            if ($this->hasRole($roles)) {
-                return true; 
-            }   
-        }
-        return false;
-    }
-    
-    public function hasRole($role)
-    {
-        if ($this->roles()->where('name', $role)->first()) {
-            return true;
-        }
-        return false;
-    }
 
 
 }

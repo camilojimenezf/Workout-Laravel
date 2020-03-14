@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Trainer;
 use Illuminate\Http\Request;
+use App\Helpers\JwtAuth;
 
 class TrainerController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Display a listing of the resource.
@@ -19,9 +16,20 @@ class TrainerController extends Controller
      */
     public function index(Request $request)
     {
-        $request->user()->authorizeRoles(['user', 'admin']);
+        $hash = $request->header('Authorization', null);
+        $jwtAuth = new JwtAuth();
+        $checkToken = $jwtAuth -> checkToken($hash);
 
-        $trainers =Trainer::all();
+        if ($checkToken) {
+            $trainers =Trainer::all();
+            return $trainers;
+        } else {
+            return response()->json( array(
+                'status' => 'error',
+                'message' => 'No autenticado'
+            ), 400);
+        }
+
         return view('trainer.index', compact('trainers'));//
     }
 
