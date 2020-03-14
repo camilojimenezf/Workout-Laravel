@@ -1,0 +1,36 @@
+.navbar {
+    height: 40px;
+}
+
+header {
+    text-align: center;
+    background-color: black;
+}
+
+.sesion {
+    padding: 10px;
+    color: slategray;
+    text-decoration: none;
+}
+
+.register {
+    padding-top: 20px;
+    margin: auto;
+}
+
+.container {
+    margin: auto;
+}
+
+.label {
+    text-size-adjust: 14px;
+}
+
+#navbar {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+.btn {
+    margin: 5px;
+}

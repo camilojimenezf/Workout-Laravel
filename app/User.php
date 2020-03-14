@@ -2,13 +2,18 @@
 
 namespace App;
 
+use App\Role;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class User extends Authenticatable
 {
     use Notifiable;
+    const USUARIO_ADMINISTRADOR = 'ADMIN';
+    const USUARIO_ATHLETE = 'ATHLETE';
+    const USUARIO_TRAINER = 'TRAINER';
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','surname','phone', 'role'
     ];
 
     /**
@@ -36,4 +41,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function athlete()
+    {
+        return $this->hasOne('App\Atlhete');
+    }
+
+    public function trainer()
+    {
+        return $this->hasOne('App\Trainer');
+    }
+
+
+
 }
