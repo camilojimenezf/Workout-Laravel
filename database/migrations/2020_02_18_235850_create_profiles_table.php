@@ -20,6 +20,7 @@ class CreateProfilesTable extends Migration
             $table->integer('height');
             $table->integer('body_fat');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

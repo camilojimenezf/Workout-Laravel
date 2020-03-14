@@ -3,11 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Trainer extends Model
 {
+    use SoftDeletes;
     protected $table = 'trainers';
     protected $fillable = ['user_id','certification','score','description'];
+    protected $dates = ['deleted_at'];
 
     public function user()
     {

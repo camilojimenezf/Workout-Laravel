@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Trainer;
 use Illuminate\Http\Request;
-use App\Helpers\JwtAuth;
+use App\Http\Controllers\ApiController;
 
-class TrainerController extends Controller
+class TrainerController extends ApiController
 {
 
     /**
@@ -16,31 +16,8 @@ class TrainerController extends Controller
      */
     public function index(Request $request)
     {
-        $hash = $request->header('Authorization', null);
-        $jwtAuth = new JwtAuth();
-        $checkToken = $jwtAuth -> checkToken($hash);
-
-        if ($checkToken) {
-            $trainers =Trainer::all();
-            return $trainers;
-        } else {
-            return response()->json( array(
-                'status' => 'error',
-                'message' => 'No autenticado'
-            ), 400);
-        }
-
-        return view('trainer.index', compact('trainers'));//
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('trainer.create');
+        $trainers = Trainer::all();
+        return $this->showAll($trainers);
     }
 
     /**
@@ -51,41 +28,27 @@ class TrainerController extends Controller
      */
     public function store(Request $request)
     {
-        $dataTrainer=$request->except('_token');
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
-            'user_id'=>'required',
-            'certification'=>'required',
-            'score'=>'required',
-            'description'=>'required'
-        ],$message);
+        // Recoger POST
+        $rules = [
+            'user_id' => 'required|integer|unique:trainers',
+            'certification' => 'required|min:10',
+            'score' => 'required|integer',
+            'description' => 'required|min:10',
+        ];
+
+        $this->validate($request, $rules);
+        $campos = $request->all();
         
-        $Trainer=new Trainer([
-            'user_id'=>$request->get('user_id'),
-            'certification'=>$request->get('certification'),
-            'score'=>$request->get('score'),
-            'description'=>$request->get('description'),
-        ]);
-        $Trainer->save();
-       return redirect('trainer')->with('message','Guardado Satisfactoriamente');
+        $trainer = Trainer::create($campos);
+
+        return $this->showOne($trainer, 201);
     }
 
    
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $trainers = Trainer::find($id);
-        return view('trainer.edit',['trainer'=>$trainers]);
+        $trainer = Trainer::findOrFail($id);
+        return $this->showOne($trainer);
     }
 
     /**
@@ -97,23 +60,36 @@ class TrainerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
-            'user_id'=>'required',
-            'certification'=>'required',
-            'score'=>'required',
-            'description'=>'required'
-        ],$message);
-        $trainer=Trainer::find($id);
-        $trainer->user_id = $request->user_id;
-        $trainer->certification = $request->certification;
-        $trainer->score = $request->score;
-        $trainer->description = $request->description;
-         
+        $trainer = Trainer::findOrFail($id);
+
+        $rules = [
+            'user_id' => 'required|number',
+            'certification' => 'required|min:10',
+            'score' => 'required|number',
+            'description' => 'required|min:10',
+        ];
+
+        $this->validate($request, $rules);
+
+        if ($request->has('certification')) {
+            $trainer->certification = $request->certification;
+        }
+
+        if ($request->has('score')) {
+            $trainer->score = $request->score;
+        }
+
+        if ($request->has('description')) {
+            $trainer->description = $request->description;
+        }
+
+        if (!$trainer->isDirty()) {
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar',422);
+        } 
+
         $trainer->save();
-    
-       // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('trainer')->with('message', 'Modificado Satisfactoriamente !');
+
+        return $this->showOne($trainer);
     }
 
     /**
@@ -124,8 +100,8 @@ class TrainerController extends Controller
      */
     public function destroy($id)
     {
-        Trainer::destroy($id);
-        return redirect('trainer')->with('message', 'trainer deleted!');
-
+        $trainer = Trainer::findOrFail($id);
+        $trainer->delete();
+        return $this->showOne($trainer);
     }
 }

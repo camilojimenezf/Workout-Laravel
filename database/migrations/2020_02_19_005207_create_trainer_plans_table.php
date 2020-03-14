@@ -18,6 +18,7 @@ class CreateTrainerPlansTable extends Migration
             $table->integer('plan_id');
             $table->integer('trainer_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -13,11 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
-
+/* Rutas para User */
 Route::post('login', 'UserController@login');
 Route::resource('users', 'UserController', ['except' => ['create', 'edit']]);
 
-/* Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-}); */
+/* Rutas para Trainers */
+Route::resource('trainers', 'TrainerController', ['except' => ['create', 'edit','index']])->middleware('trainerCheck');
+Route::resource('trainers', 'TrainerController', ['only' => ['index']]);
+
+
+/* Rutas para Routine */
+Route::resource('routines', 'RoutineController', ['except' => ['create', 'edit']])->middleware('trainerCheck');
 

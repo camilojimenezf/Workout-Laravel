@@ -93,6 +93,7 @@ $factory->define(Profile::class, function (Faker $faker) {
 
 $factory->define(Routine::class, function (Faker $faker) {
     return [
+        'trainer_id' => Trainer::all()->random()->id,
         'title' => $faker->randomElement(['Rutina Volumen', 'Rutina acondicionamiento aerobico', 'Rutina definicion']),
         'description' => $faker->text(100),
         'duration' => $faker->randomElement([30, 45, 60, 90, 120, 150, 180, 360]),
