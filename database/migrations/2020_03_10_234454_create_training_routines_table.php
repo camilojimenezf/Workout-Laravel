@@ -18,6 +18,7 @@ class CreateTrainingRoutinesTable extends Migration
             $table->integer('training_id');
             $table->integer('routine_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

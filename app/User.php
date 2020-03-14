@@ -4,13 +4,14 @@ namespace App;
 
 use App\Role;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
     const USUARIO_ADMINISTRADOR = 'ADMIN';
     const USUARIO_ATHLETE = 'ATHLETE';
     const USUARIO_TRAINER = 'TRAINER';
@@ -23,6 +24,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password','surname','phone', 'role'
     ];
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that should be hidden for arrays.

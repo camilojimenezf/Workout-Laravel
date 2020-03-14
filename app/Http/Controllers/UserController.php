@@ -6,8 +6,9 @@ use App\Helpers\JwtAuth;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     public function login(Request $request) {
         $jwtAuth = new JwtAuth();
@@ -42,7 +43,7 @@ class UserController extends Controller
     public function index()
     {
         $usuarios = User::all();
-        return response()->json(['data' => $usuarios], 200);
+        return $this->showAll($usuarios);
     }
 
     /**
@@ -68,7 +69,7 @@ class UserController extends Controller
         
         $usuario = User::create($campos);
 
-        return response()->json(['data' => $usuario], 201);
+        return $this->showOne($usuario, 201);
     }
 
     /**
@@ -79,8 +80,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $usuario = User::where('id',$id)->get();
-        return response()->json(['data'=>$usuario], 200);
+        //throw new \Illuminate\Auth\AuthenticationException('Error message');
+        $usuario = User::findOrFail($id);
+        return $this->showOne($usuario);
     }
 
     /**
@@ -123,12 +125,12 @@ class UserController extends Controller
         }
 
         if (!$user->isDirty()) {
-            return response()->json(['error'=>'Se debe especificar al menos un valor diferente para actualizar', 'code' => 422], 422);
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar',422);
         } 
 
         $user->save();
 
-        return response()->json(['data' => $user], 200);
+        return $this->showOne($user);
     }
 
     /**
@@ -139,6 +141,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        
+        $user = User::findOrFail($id);
+        $user->delete();
+        return $this->showOne($user);
     }
 }

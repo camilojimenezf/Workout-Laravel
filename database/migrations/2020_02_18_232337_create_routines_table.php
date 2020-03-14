@@ -15,12 +15,14 @@ class CreateRoutinesTable extends Migration
     {
         Schema::create('routines', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('trainer_id');
             $table->string('title');
             $table->string('description');
             $table->integer('duration'); // duration in days
             $table->integer('frequency'); //training x week
             $table->string('goal');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Plan;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use DB;
-use Input;
-use Storage;
+use App\Http\Controllers\ApiController;
 
-class PlanController extends Controller
+
+class PlanController extends ApiController
 {
     /**
      * Display a listing of the resource.
