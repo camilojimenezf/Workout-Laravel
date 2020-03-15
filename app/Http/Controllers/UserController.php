@@ -54,20 +54,24 @@ class UserController extends ApiController
      */
     public function store(Request $request)
     {
-        // Recoger POST
-        $rules = [
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'phone' => 'required',
-            'role' => 'in:'. User::USUARIO_ADMINISTRADOR . ',' . User::USUARIO_ATHLETE . ',' . User::USUARIO_TRAINER,
-        ];
+        // Recoger los datos del usuario por post
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
 
-        $this->validate($request, $rules);
-        $campos = $request->all();
-        $campos['password'] = hash('sha256', $request->password);
+        $validate = \Validator::make($params_array, [
+            'name' => 'required|alpha',
+            'surname' => 'required|alpha',
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+
+        $params_array['password'] = hash('sha256', $params_array['password']);
         
-        $usuario = User::create($campos);
+        $usuario = User::create($params_array);
 
         return $this->showOne($usuario, 201);
     }
@@ -96,32 +100,38 @@ class UserController extends ApiController
     {
         $user = User::findOrFail($id);
 
-        $rules = [
-            'email' => 'email|unique:users,email,' . $user->id,
-            'password' => 'min:6',
-            'role' => 'in:'. User::USUARIO_ADMINISTRADOR . ',' . User::USUARIO_ATHLETE . ',' . User::USUARIO_TRAINER,
-        ];
+        $json = $request->json;
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
 
-        $this->validate($request, $rules);
+        $validate = \Validator::make($params_array, [
+            'name' => 'alpha',
+            'surname' => 'alpha',
+            'email' => 'email',
+        ]);
 
-        if ($request->has('name')) {
-            $user->name = $request->name;
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
         }
 
-        if ($request->has('email')) {
-            $user->email = $request->email;
+        if (isset($params->name)) {
+            $user->name = $params->name;
         }
 
-        if ($request->has('phone')) {
-            $user->phone = $request->phone;
+        if (isset($params->email)) {
+            $user->email = $params->email;
         }
 
-        if ($request->has('password')) {
-            $user->password = hash('sha256', $request->password);
+        if (isset($params->phone)) {
+            $user->phone = $params->phone;
         }
 
-        if ($request->has('role')) {
-            $user->role = $request->role;
+        if (isset($params->password) && $params->password != '') {
+            $user->password = hash('sha256', $params->password);
+        }
+
+        if (isset($params->role)) {
+            $user->role = $params->role;
         }
 
         if (!$user->isDirty()) {

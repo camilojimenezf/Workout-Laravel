@@ -27,20 +27,23 @@ class RoutineController extends ApiController
      */
     public function store(Request $request)
     {
-        // Recoger POST
-        $rules = [
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+        $validate = \Validator::make($params_array, [
             'trainer_id' => 'required',
-            'title' => 'required|min:3',
-            'description' => 'required|min:10',
+            'title' => 'required',
+            'description' => 'required',
             'duration' => 'required|integer',
             'frequency' => 'required|integer',
-            'goal' => 'required|min:10',
-        ];
+            'goal' => 'required',
+        ]);
 
-        $this->validate($request, $rules);
-        $campos = $request->all();
-        
-        $routine = Routine::create($campos);
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+
+        $routine = Routine::create($params_array);
 
         return $this->showOne($routine, 201);
     }
@@ -63,39 +66,41 @@ class RoutineController extends ApiController
     {
         $routine = Routine::findOrFail($id);
 
-        $rules = [
-            'trainer_id' => 'required',
-            'title' => 'required|min:3',
-            'description' => 'required|min:10',
-            'duration' => 'required|integer',
-            'frequency' => 'required|integer',
-            'goal' => 'required|min:10',
-        ];
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
 
-        $this->validate($request, $rules);
+        $validate = \Validator::make($params_array, [
+            'duration' => 'integer',
+            'frequency' => 'integer',
+        ]);
 
-        if ($request->has('trainer_id')) {
-            $routine->trainer_id = $request->trainer_id;
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
         }
 
-        if ($request->has('title')) {
-            $routine->title = $request->title;
+        if (isset($params->trainer_id)) {
+            $routine->trainer_id = $params->trainer_id;
         }
 
-        if ($request->has('description')) {
-            $routine->description = $request->description;
+        if (isset($params->title)) {
+            $routine->title = $params->title;
         }
 
-        if ($request->has('duration')) {
-            $routine->duration = $request->duration;
+        if (isset($params->description)) {
+            $routine->description = $params->description;
         }
 
-        if ($request->has('frequency')) {
-            $routine->frequency = $request->frequency;
+        if (isset($params->duration)) {
+            $routine->duration = $params->duration;
         }
 
-        if ($request->has('goal')) {
-            $routine->goal = $request->goal;
+        if (isset($params->frequency)) {
+            $routine->frequency = $params->frequency;
+        }
+
+        if (isset($params->goal)) {
+            $routine->goal = $params->goal;
         }
 
         if (!$routine->isDirty()) {

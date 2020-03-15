@@ -15,25 +15,22 @@ use Illuminate\Http\Request;
 
 /* Rutas para User */
 Route::post('login', 'UserController@login');
-
-Route::resource('users', 'UserController', ['except' => ['create', 'edit']]);
+Route::resource('users', 'UserController', ['except' => ['create', 'edit']]);//->middleware('authCheck');
 
 /* Rutas para Trainers */
 Route::resource('trainers', 'TrainerController', ['except' => ['create', 'edit','index']])->middleware('trainerCheck');
 Route::resource('trainers', 'TrainerController', ['only' => ['index']]);
 
-//Route::resource('athletes', 'AthleteController', ['except' => ['create', 'edit','index']])->middleware('athleteCheck');
-//Route::resource('athletes', 'AthleteController', ['only' => ['index']]);
-
-Route::resource('athletes', 'AthleteController');
-
-//Route::resource('profile', 'ProfileController', ['except' => ['create', 'edit','index']])->middleware('athleteCheck');
-//Route::resource('profile', 'ProfileController', ['only' => ['index']]);
-Route::resource('profile', 'ProfileController');
-Route::resource('plans', 'PlanController');
-Route::resource('trainings', 'TrainingController');
-
+/* Rutas para Athletes */
+Route::resource('athletes', 'TrainerController', ['except' => ['create', 'edit','index']])->middleware('athleteCheck');
+Route::resource('athletes', 'TrainerController', ['only' => ['index']]);
 
 /* Rutas para Routine */
 Route::resource('routines', 'RoutineController', ['except' => ['create', 'edit']])->middleware('trainerCheck');
+
+/* Rutas para User-Athlete */
+Route::resource('users.athletes', 'User\UserAthleteController', ['only' => ['index','store']])->middleware('authCheck');
+
+/* Rutas para User-Profile */
+Route::resource('users.profiles', 'User\UserProfileController', ['only' => ['index']])->middleware('athleteCheck');
 

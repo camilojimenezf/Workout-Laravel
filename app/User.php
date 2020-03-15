@@ -46,7 +46,7 @@ class User extends Authenticatable
 
     public function athlete()
     {
-        return $this->hasOne('App\Atlhete');
+        return $this->hasOne(Athlete::class);
     }
 
     public function trainer()

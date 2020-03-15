@@ -10,24 +10,16 @@ use App\Http\Controllers\ApiController;
 
 class ProfileController extends ApiController
 {
-    /**
+            /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $profiles=Profile::all();
-    
-        return $this->showAll($profiles);   //
+        $profiles = Profile::all();
+        return $this->showAll($profiles);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
 
     /**
      * Store a newly created resource in storage.
@@ -35,74 +27,84 @@ class ProfileController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request){
-        
-        $rules=[
-            'athlete_id'=>'required',
-            'weight'=>'required',
-            'height'=>'required|integer',
-            'body_fat'=>'required|integer'
-        ];
+    public function store(Request $request)
+    {
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
 
-        $this->validate($request,$rules);
-        $campos=$request->all();
-        $profile=Profile::create($campos);
-        return $this->showOne($profile,201);    
+        $validate = \Validator::make($params_array, [
+            'athlete_id' => 'required|integer',
+            'weight' => 'required|integer',
+            'height' => 'required|integer',
+            'body_fat' => 'required|integer',
+        ]);
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+
+        $profile = Profile::create($params_array);
+
+        return $this->showOne($profile, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show($id)
     {
-        $profile =Profile::findOrFail($id);
+        $profile = Profile::findOrFail($id);
         return $this->showOne($profile);
-     
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
-        
-        $profile =Profile::findOrFail($id);
-        
-        $rules=[
-            'athlete_id'=>'required|unique:athletes',
-            'weight'=>'required',
-            'height'=>'required|integer',
-            'body_fat'=>'required|integer'
-        ];
+    public function update(Request $request, $id)
+    {
+        $profile = Profile::findOrFail($id);
 
-        $this->validate($request,$rules);
-
-        if ($request->has('athlete_id')) {
-            $profile->athlete_id = $request->athlete_id;
-        }
-        if ($request->has('weight')) {
-            $profile->weight = $request->weight;
-        }
-        if ($request->has('height')) {
-            $profile->height = $request->height;
-        }
-        if ($request->has('body_fat')) {
-            $profile->body_fat = $request->body_fat;
-        }
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
 
 
+        $validate = \Validator::make($params_array, [
+            'athlete_id' => 'integer',
+            'weight' => 'integer',
+            'height' => 'integer',
+            'body_fat' => 'integer',
+        ]);
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+
+        if (isset($params->athlete_id)) {
+            $profile->athlete_id = $params->athlete_id;
+        }
+
+        if (isset($params->weight)) {
+            $profile->weight = $params->weight;
+        }
+
+        if (isset($params->height)) {
+            $profile->height = $params->height;
+        }
+
+        if (isset($params->body_fat)) {
+            $profile->body_fat = $params->body_fat;
+        }
+
+        if (!$profile->isDirty()) {
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar',422);
+        } 
 
         $profile->save();
 
-        $this->validate($request,$rules);
-
-    
-   
+        return $this->showOne($profile);
     }
 
     /**
@@ -113,7 +115,6 @@ class ProfileController extends ApiController
      */
     public function destroy($id)
     {
-        
         $profile = Profile::findOrFail($id);
         $profile->delete();
         return $this->showOne($profile);

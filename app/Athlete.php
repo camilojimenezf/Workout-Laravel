@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Athlete extends Model
 {
+    const BEGINNER = 'BEGINNER';
+    const MEDIUM = 'MEDIUM';
+    const PRO = 'PRO';
+
     use SoftDeletes;
     protected $table = 'athletes';
     protected $fillable = ['user_id','level','points'];

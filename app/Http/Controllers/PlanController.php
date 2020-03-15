@@ -14,10 +14,9 @@ class PlanController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $plans=Plan::all();
-    
+        $plans = Plan::all();
         return $this->showAll($plans);
     }
 
@@ -30,54 +29,67 @@ class PlanController extends ApiController
      */
     public function store(Request $request)
     {
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
 
-        $rules=[
+        $validate = \Validator::make($params_array, [
             'name' => 'required',
-            'price' =>'required'
-        
-        ];
+            'price' => 'required|integer',
+        ]);
 
-        $this->validate($request,$rules);
-        $campos=$request->all();
-        $plan=Plan::create($campos);
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
 
-        return $this->showOne($plan,201);  
+        $plan = Plan::create($params_array);
+
+        return $this->showOne($plan, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show($id)
     {
         $plan = Plan::findOrFail($id);
         return $this->showOne($plan);
     }
-   
-    public function update(Request $request, $id){
-        
-        $plan =Plan::findOrFail($id);
 
-        $rules=[
-            'name' => 'required',
-            'price' =>'required|integer'
-        
-        ];
-        $this->validate($request, $rules);
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $plan = Plan::findOrFail($id);
 
-        if ($request->has('name')) {
-            $plan->name = $request->name;
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
+
+        $validate = \Validator::make($params_array, [
+            'price' => 'integer',
+        ]);
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
         }
 
-        if ($request->has('price')) {
-            $plan->price = $request->price;
+        if (isset($params->name)) {
+            $plan->name = $params->name;
         }
-         
+
+        if (isset($params->price)) {
+            $plan->price = $params->price;
+        }
+
+        if (!$plan->isDirty()) {
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar',422);
+        } 
+
         $plan->save();
-    
-       // Session::flash('message', 'Editado Satisfactoriamente !');
+
         return $this->showOne($plan);
     }
 
@@ -87,9 +99,10 @@ class PlanController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id){
+    public function destroy($id)
+    {
         $plan = Plan::findOrFail($id);
         $plan->delete();
         return $this->showOne($plan);
-   }
+    }
 }
