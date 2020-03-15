@@ -9,61 +9,63 @@ use App\Http\Controllers\ApiController;
 class AthleteController extends ApiController{
     
     public function index(Request $request){
-        $request->user()->authorizeRoles(['user', 'admin','athlete']);
 
         $athletes=Athlete::all();
-        return view ('athlete.index',compact('athletes'));
+        return $this->showAll($athletes);
     }
 
-    public function create(){
-      
-            return view ('athlete.create');
-
-    }
     public function store(Request $request){
-        $dataAthlete=$request->except('_token');
-        $message=["required"=>'Attribute is required'];
-        $request->validate([
-            'user_id'=>'required',
-            'level'=>'required',
-            'points'=>'required'
-        ],$message);
-        
-        $Athlete=new Athlete([
-            'user_id'=>$request->get('user_id'),
-            'level'=>$request->get('level'),
-            'points'=>$request->get('points') 
-        ]);
-        $Athlete->save();
-       return redirect('athlete')->with('message','Satisfactory Saved!');
+        $rules=[
+            'user_id' => 'required|unique:athletes',
+            'level' => 'required',
+            'points' => 'required|integer'
+
+        ];
+        $this->validate($request,$rules);
+        $campos=$request->all();
+        $athlete=Athlete::create($campos);
+        return $this->showOne($athlete,201);
+      
 
     }
-    public function edit($id)
-    {
-        $athletes = Athlete::find($id);
-        return view('athlete.edit',['athlete'=>$athletes]);
+    public function show($id){
+        $athlete =Athlete::findOrFail($id);
+        return $this->showOne($athlete);
+     
     }
-
     public function update(Request $request, $id){
-        $message=["required"=>'Attribute is required'];
-        $request->validate([
-            'user_id'=>'required',
-            'level'=>'required',
-            'points'=>'required'
-        ],$message);
-        $athlete=Athlete::find($id);
-        $athlete->user_id = $request->user_id;
-        $athlete->level = $request->level;
-        $athlete->points = $request->points;   
+       
+        $athlete = Athlete::findOrFail($id);
+       
+        $rules=[
+            'user_id' => 'required|unique:athletes',
+            'level' => 'required',
+            'points' => 'required|integer'
+
+        ]; 
+
+        $this->validate($request, $rules);
+
+        if ($request->has('user_id')) {
+            $athlete->user_id = $request->user_id;
+        }
+        if ($request->has('level')) {
+            $athlete->level = $request->level;
+        }
+        if ($request->has('points')) {
+            $athlete->points = $request->points;
+        }
+       
         $athlete->save();
-    
-       // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('athlete')->with('message', 'Successfully modified !');
-    }
-     public function destroy($id){
-         Athlete::destroy($id);
-        return redirect('athlete')->with('message', 'athletes deleted!');
-    }
+
+        return $this->showOne($athlete);   
+     }
+     public function destroy($id)
+     {
+         $athlete = Athlete::findOrFail($id);
+         $athlete->delete();
+         return $this->showOne($athlete);
+     }
 
     
 }

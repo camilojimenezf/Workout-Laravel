@@ -18,19 +18,10 @@ class PlanController extends ApiController
     {
         $plans=Plan::all();
     
-         return view ('plan.index',compact('plans'));
+        return $this->showAll($plans);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view ('plan.create');
-    }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -39,19 +30,18 @@ class PlanController extends ApiController
      */
     public function store(Request $request)
     {
-        $dataPlans=$request->except('_token');
-        $message=["required"=>'Attribute is required'];
-        $request->validate([
-            'name'=>'required',
-            'price'=>'required',
-        ],$message);
+
+        $rules=[
+            'name' => 'required',
+            'price' =>'required'
         
-        $Plan=new Plan([
-            'name'=>$request->get('name'),
-            'price'=>$request->get('price'),
-        ]);
-        $Plan->save();
-       return redirect('plan')->with('message','Saved Successfully !');
+        ];
+
+        $this->validate($request,$rules);
+        $campos=$request->all();
+        $plan=Plan::create($campos);
+
+        return $this->showOne($plan,201);  
     }
 
     /**
@@ -62,37 +52,33 @@ class PlanController extends ApiController
      */
     public function show($id)
     {
-        //
+        $plan = Plan::findOrFail($id);
+        return $this->showOne($plan);
     }
-    public function edit($id)
-    {
-        $plans = Plan::find($id);
-        return view('plan.edit',['plan'=>$plans]);
-    }
-
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function update(Request $request, $id){
-        $message=["required"=>'Attribute is required'];
-        $request->validate([
-            'name'=>'required',
-            'price'=>'required',
-        ],$message);
-        $plan=Plan::find($id);
-        $plan->name = $request->name;
-        $plan->price = $request->price;
+        
+        $plan =Plan::findOrFail($id);
+
+        $rules=[
+            'name' => 'required',
+            'price' =>'required|integer'
+        
+        ];
+        $this->validate($request, $rules);
+
+        if ($request->has('name')) {
+            $plan->name = $request->name;
+        }
+
+        if ($request->has('price')) {
+            $plan->price = $request->price;
+        }
          
         $plan->save();
     
        // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('plan')->with('message', 'Successfully modified!');
+        return $this->showOne($plan);
     }
 
     /**
@@ -102,7 +88,8 @@ class PlanController extends ApiController
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-        Plan::destroy($id);
-       return redirect('plan')->with('message', 'Plan deleted!');
+        $plan = Plan::findOrFail($id);
+        $plan->delete();
+        return $this->showOne($plan);
    }
 }

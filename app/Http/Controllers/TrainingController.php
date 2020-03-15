@@ -14,10 +14,8 @@ class TrainingController extends Controller{
     public function index()
     {
         $trainings=Training::all();
-
-        return view('training.index', compact('trainings'));//
-
-        
+    
+        return $this->showAll($trainings);
     }
 
     /**

@@ -19,7 +19,7 @@ class ProfileController extends ApiController
     {
         $profiles=Profile::all();
     
-        return view ('profile.index',compact('profiles'));   //
+        return $this->showAll($profiles);   //
     }
 
     /**
@@ -27,10 +27,7 @@ class ProfileController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        return view ('profile.create');//
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -38,25 +35,19 @@ class ProfileController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $dataProfiles=$request->except('_token');
-        $message=["required"=>'Attribute is required'];
-        $request->validate([
+    public function store(Request $request){
+        
+        $rules=[
             'athlete_id'=>'required',
             'weight'=>'required',
-            'height'=>'required',
-            'body_fat'=>'required'
-        ],$message);
-        
-        $Profile=new Profile([
-            'athlete_id'=>$request->get('athlete_id'),
-            'weight'=>$request->get('weight'),
-            'height'=>$request->get('height'),
-            'body_fat'=>$request->get('body_fat'),
-        ]);
-        $Profile->save();
-       return redirect('profile')->with('message','Saved Successfully  !');
+            'height'=>'required|integer',
+            'body_fat'=>'required|integer'
+        ];
+
+        $this->validate($request,$rules);
+        $campos=$request->all();
+        $profile=Profile::create($campos);
+        return $this->showOne($profile,201);    
     }
 
     /**
@@ -67,7 +58,9 @@ class ProfileController extends ApiController
      */
     public function show($id)
     {
-        //
+        $profile =Profile::findOrFail($id);
+        return $this->showOne($profile);
+     
     }
 
     /**
@@ -76,38 +69,40 @@ class ProfileController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $profiles = Profile::find($id);
-        return view('profile.edit',['profile'=>$profiles]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $message=["required"=>'Attribute is required'];
-        $request->validate([
-            'athlete_id'=>'required',
+    public function update(Request $request, $id){
+        
+        $profile =Profile::findOrFail($id);
+        
+        $rules=[
+            'athlete_id'=>'required|unique:athletes',
             'weight'=>'required',
-            'height'=>'required',
-            'body_fat'=>'required'
-        ],$message);
-        $profile=Profile::find($id);
-        $profile->athlete_id = $request->athlete_id;
-        $profile->weight = $request->weight;
-        $profile->height = $request->height;
-        $profile->body_fat = $request->body_fat;
-         
+            'height'=>'required|integer',
+            'body_fat'=>'required|integer'
+        ];
+
+        $this->validate($request,$rules);
+
+        if ($request->has('athlete_id')) {
+            $profile->athlete_id = $request->athlete_id;
+        }
+        if ($request->has('weight')) {
+            $profile->weight = $request->weight;
+        }
+        if ($request->has('height')) {
+            $profile->height = $request->height;
+        }
+        if ($request->has('body_fat')) {
+            $profile->body_fat = $request->body_fat;
+        }
+
+
+
         $profile->save();
+
+        $this->validate($request,$rules);
+
     
-       // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('profile')->with('message', 'Successfully modified !');
+   
     }
 
     /**
@@ -118,7 +113,9 @@ class ProfileController extends ApiController
      */
     public function destroy($id)
     {
-        Profile::destroy($id);
-        return redirect('profile')->with('message', 'plan deleted!');
+        
+        $profile = Profile::findOrFail($id);
+        $profile->delete();
+        return $this->showOne($profile);
     }
 }

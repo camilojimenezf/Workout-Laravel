@@ -26,7 +26,7 @@ class UserController extends ApiController
 
         if (!is_null($email) && !is_null($password)) {
             $signup = $jwtAuth->signup($email, $pwd, $getToken);
-            return response()->json($signup, 200);
+            return response()->json($signup, 200);      
         } else {
             return response()->json( array(
                 'status' => 'error',
