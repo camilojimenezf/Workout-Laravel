@@ -8,62 +8,106 @@ use App\Http\Controllers\ApiController;
 
 class AthleteController extends ApiController{
     
-    public function index(Request $request){
-        $request->user()->authorizeRoles(['user', 'admin']);
-
-        $athletes=Athlete::all();
-        return view ('athlete.index',compact('athletes'));
-    }
-
-    public function create(){
-      
-            return view ('athlete.create');
-
-    }
-    public function store(Request $request){
-        $dataAthlete=$request->except('_token');
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
-            'user_id'=>'required',
-            'level'=>'required',
-            'points'=>'required'
-        ],$message);
-        
-        $Athlete=new Athlete([
-            'user_id'=>$request->get('user_id'),
-            'level'=>$request->get('level'),
-            'points'=>$request->get('points') 
-        ]);
-        $Athlete->save();
-       return redirect('athlete')->with('message','Guardado Satisfactoriamente !');
-
-    }
-    public function edit($id)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
     {
-        $athletes = Athlete::find($id);
-        return view('athlete.edit',['athlete'=>$athletes]);
+        $athletes = Athlete::all();
+        return $this->showAll($athletes);
     }
 
-    public function update(Request $request, $id){
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
-            'user_id'=>'required',
-            'level'=>'required',
-            'points'=>'required'
-        ],$message);
-        $athlete=Athlete::find($id);
-        $athlete->user_id = $request->user_id;
-        $athlete->level = $request->level;
-        $athlete->points = $request->points;   
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        // Recoger los datos del usuario por post
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+        $validate = \Validator::make($params_array, [
+            'user_id' => 'required|integer',
+            'level' => 'required',
+            'points' => 'required|integer'
+        ]);
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+        
+        $athlete = Athlete::create($params_array);
+
+        return $this->showOne($athlete, 201);
+    }
+
+   
+    public function show($id)
+    {
+        $athlete = Athlete::findOrFail($id);
+        return $this->showOne($athlete);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $athlete = Athlete::findOrFail($id);
+
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
+
+        $validate = \Validator::make($params_array, [
+            'user_id' => 'integer',
+            'points' => 'integer'
+        ]);
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+
+        if (isset($params->user_id)) {
+            $athlete->user_id = $params->user_id;
+        }
+
+        if (isset($params->level)) {
+            $athlete->level = $params->level;
+        }
+
+        if (isset($params->points)) {
+            $athlete->points = $params->points;
+        }
+
+        if (!$athlete->isDirty()) {
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar',422);
+        } 
+
         $athlete->save();
-    
-       // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('athlete')->with('message', 'Modificado Satisfactoriamente !');
-    }
-     public function destroy($id){
-         Athlete::destroy($id);
-        return redirect('athlete')->with('message', 'athletes deleted!');
+
+        return $this->showOne($athlete);
     }
 
-    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $athlete = Athlete::findOrFail($id);
+        $athlete->delete();
+        return $this->showOne($athlete);
+    }
 }

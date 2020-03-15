@@ -28,18 +28,22 @@ class TrainerController extends ApiController
      */
     public function store(Request $request)
     {
-        // Recoger POST
-        $rules = [
-            'user_id' => 'required|integer|unique:trainers',
-            'certification' => 'required|min:10',
-            'score' => 'required|integer',
-            'description' => 'required|min:10',
-        ];
+        // Recoger los datos del usuario por post
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
 
-        $this->validate($request, $rules);
-        $campos = $request->all();
+        $validate = \Validator::make($params_array, [
+            'user_id' => 'required|integer',
+            'certification' => 'required',
+            'score' => 'required|integer',
+            'description' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
         
-        $trainer = Trainer::create($campos);
+        $trainer = Trainer::create($params_array);
 
         return $this->showOne($trainer, 201);
     }
@@ -62,25 +66,34 @@ class TrainerController extends ApiController
     {
         $trainer = Trainer::findOrFail($id);
 
-        $rules = [
-            'user_id' => 'required|number',
-            'certification' => 'required|min:10',
-            'score' => 'required|number',
-            'description' => 'required|min:10',
-        ];
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
 
-        $this->validate($request, $rules);
+        $validate = \Validator::make($params_array, [
+            'user_id' => 'integer',
+            'score' => 'integer',
+            'description' => 'required'
+        ]);
 
-        if ($request->has('certification')) {
-            $trainer->certification = $request->certification;
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
         }
 
-        if ($request->has('score')) {
-            $trainer->score = $request->score;
+        if (isset($params->user_id)) {
+            $trainer->user_id = $params->user_id;
         }
 
-        if ($request->has('description')) {
-            $trainer->description = $request->description;
+        if (isset($params->certification)) {
+            $trainer->certification = $params->certification;
+        }
+
+        if (isset($params->score)) {
+            $trainer->score = $params->score;
+        }
+
+        if (isset($params->description)) {
+            $trainer->description = $params->description;
         }
 
         if (!$trainer->isDirty()) {
