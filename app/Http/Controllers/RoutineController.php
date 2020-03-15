@@ -66,17 +66,13 @@ class RoutineController extends ApiController
     {
         $routine = Routine::findOrFail($id);
 
-                $json = $request->input('json', null);
+        $json = $request->input('json', null);
         $params = json_decode($json);
         $params_array = json_decode($json, true);
 
         $validate = \Validator::make($params_array, [
-            'trainer_id' => 'required',
-            'title' => 'required',
-            'description' => 'required',
-            'duration' => 'required|integer',
-            'frequency' => 'required|integer',
-            'goal' => 'required',
+            'duration' => 'integer',
+            'frequency' => 'integer',
         ]);
 
         if ($validate->fails()) {

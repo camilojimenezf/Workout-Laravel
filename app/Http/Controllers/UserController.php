@@ -105,10 +105,9 @@ class UserController extends ApiController
         $params_array = json_decode($json, true);
 
         $validate = \Validator::make($params_array, [
-            'name' => 'required|alpha',
-            'surname' => 'required|alpha',
-            'email' => 'required|email',
-            'password' => 'required'
+            'name' => 'alpha',
+            'surname' => 'alpha',
+            'email' => 'email',
         ]);
 
         if ($validate->fails()) {
@@ -127,7 +126,7 @@ class UserController extends ApiController
             $user->phone = $params->phone;
         }
 
-        if (isset($params->password)) {
+        if (isset($params->password) && $params->password != '') {
             $user->password = hash('sha256', $params->password);
         }
 

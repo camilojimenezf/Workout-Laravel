@@ -72,10 +72,10 @@ class ProfileController extends ApiController
 
 
         $validate = \Validator::make($params_array, [
-            'athlete_id' => 'required|integer',
-            'weight' => 'required|integer',
-            'height' => 'required|integer',
-            'body_fat' => 'required|integer',
+            'athlete_id' => 'integer',
+            'weight' => 'integer',
+            'height' => 'integer',
+            'body_fat' => 'integer',
         ]);
 
         if ($validate->fails()) {

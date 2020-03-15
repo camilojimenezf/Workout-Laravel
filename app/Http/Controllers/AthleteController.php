@@ -69,9 +69,8 @@ class AthleteController extends ApiController{
         $params_array = json_decode($json, true);
 
         $validate = \Validator::make($params_array, [
-            'user_id' => 'required|integer',
-            'level' => 'required',
-            'points' => 'required|integer'
+            'user_id' => 'integer',
+            'points' => 'integer'
         ]);
 
         if ($validate->fails()) {

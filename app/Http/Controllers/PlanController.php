@@ -68,8 +68,7 @@ class PlanController extends ApiController
         $params_array = json_decode($json, true);
 
         $validate = \Validator::make($params_array, [
-            'name' => 'required',
-            'price' => 'required|integer',
+            'price' => 'integer',
         ]);
 
         if ($validate->fails()) {

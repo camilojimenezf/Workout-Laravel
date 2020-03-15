@@ -71,9 +71,8 @@ class TrainerController extends ApiController
         $params_array = json_decode($json, true);
 
         $validate = \Validator::make($params_array, [
-            'user_id' => 'required|integer',
-            'certification' => 'required',
-            'score' => 'required|integer',
+            'user_id' => 'integer',
+            'score' => 'integer',
             'description' => 'required'
         ]);
 
