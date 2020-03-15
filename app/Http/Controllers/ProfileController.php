@@ -10,26 +10,15 @@ use App\Http\Controllers\ApiController;
 
 class ProfileController extends ApiController
 {
-    /**
+            /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $profiles=Profile::all();
-    
-        return view ('profile.index',compact('profiles'));   //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view ('profile.create');//
+        $profiles = Profile::all();
+        return $this->showAll($profiles);
     }
 
     /**
@@ -40,46 +29,30 @@ class ProfileController extends ApiController
      */
     public function store(Request $request)
     {
-        $dataProfiles=$request->except('_token');
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
-            'athlete_id'=>'required',
-            'weight'=>'required',
-            'height'=>'required',
-            'body_fat'=>'required'
-        ],$message);
-        
-        $Profile=new Profile([
-            'athlete_id'=>$request->get('athlete_id'),
-            'weight'=>$request->get('weight'),
-            'height'=>$request->get('height'),
-            'body_fat'=>$request->get('body_fat'),
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+        $validate = \Validator::make($params_array, [
+            'athlete_id' => 'required|integer',
+            'weight' => 'required|integer',
+            'height' => 'required|integer',
+            'body_fat' => 'required|integer',
         ]);
-        $Profile->save();
-       return redirect('profile')->with('message','Guardado Satisfactoriamente !');
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+
+        $profile = Profile::create($params_array);
+
+        return $this->showOne($profile, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $profiles = Profile::find($id);
-        return view('profile.edit',['profile'=>$profiles]);
+        $profile = Profile::findOrFail($id);
+        return $this->showOne($profile);
     }
 
     /**
@@ -91,23 +64,47 @@ class ProfileController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
-            'athlete_id'=>'required',
-            'weight'=>'required',
-            'height'=>'required',
-            'body_fat'=>'required'
-        ],$message);
-        $profile=Profile::find($id);
-        $profile->athlete_id = $request->athlete_id;
-        $profile->weight = $request->weight;
-        $profile->height = $request->height;
-        $profile->body_fat = $request->body_fat;
-         
+        $profile = Profile::findOrFail($id);
+
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
+
+
+        $validate = \Validator::make($params_array, [
+            'athlete_id' => 'required|integer',
+            'weight' => 'required|integer',
+            'height' => 'required|integer',
+            'body_fat' => 'required|integer',
+        ]);
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+
+        if (isset($params->athlete_id)) {
+            $profile->athlete_id = $params->athlete_id;
+        }
+
+        if (isset($params->weight)) {
+            $profile->weight = $params->weight;
+        }
+
+        if (isset($params->height)) {
+            $profile->height = $params->height;
+        }
+
+        if (isset($params->body_fat)) {
+            $profile->body_fat = $params->body_fat;
+        }
+
+        if (!$profile->isDirty()) {
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar',422);
+        } 
+
         $profile->save();
-    
-       // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('profile')->with('message', 'Modificado Satisfactoriamente !');
+
+        return $this->showOne($profile);
     }
 
     /**
@@ -118,7 +115,8 @@ class ProfileController extends ApiController
      */
     public function destroy($id)
     {
-        Profile::destroy($id);
-        return redirect('profile')->with('message', 'plan deleted!');
+        $profile = Profile::findOrFail($id);
+        $profile->delete();
+        return $this->showOne($profile);
     }
 }

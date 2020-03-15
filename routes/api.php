@@ -21,7 +21,12 @@ Route::resource('users', 'UserController', ['except' => ['create', 'edit']]);
 Route::resource('trainers', 'TrainerController', ['except' => ['create', 'edit','index']])->middleware('trainerCheck');
 Route::resource('trainers', 'TrainerController', ['only' => ['index']]);
 
+/* Rutas para Athletes */
+Route::resource('athletes', 'TrainerController', ['except' => ['create', 'edit','index']])->middleware('athleteCheck');
+Route::resource('athletes', 'TrainerController', ['only' => ['index']]);
 
 /* Rutas para Routine */
 Route::resource('routines', 'RoutineController', ['except' => ['create', 'edit']])->middleware('trainerCheck');
+
+
 

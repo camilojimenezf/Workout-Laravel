@@ -14,21 +14,10 @@ class PlanController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $plans=Plan::all();
-    
-         return view ('plan.index',compact('plans'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view ('plan.create');
+        $plans = Plan::all();
+        return $this->showAll($plans);
     }
 
     /**
@@ -39,38 +28,29 @@ class PlanController extends ApiController
      */
     public function store(Request $request)
     {
-        $dataPlans=$request->except('_token');
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
-            'name'=>'required',
-            'price'=>'required',
-        ],$message);
-        
-        $Plan=new Plan([
-            'name'=>$request->get('name'),
-            'price'=>$request->get('price'),
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+        $validate = \Validator::make($params_array, [
+            'name' => 'required',
+            'price' => 'required|integer',
         ]);
-        $Plan->save();
-       return redirect('plan')->with('message','Guardado Satisfactoriamente !');
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+
+        $plan = Plan::create($params_array);
+
+        return $this->showOne($plan, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show($id)
     {
-        //
+        $plan = Plan::findOrFail($id);
+        return $this->showOne($plan);
     }
-    public function edit($id)
-    {
-        $plans = Plan::find($id);
-        return view('plan.edit',['plan'=>$plans]);
-    }
-
-
 
     /**
      * Update the specified resource in storage.
@@ -79,20 +59,38 @@ class PlanController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
-            'name'=>'required',
-            'price'=>'required',
-        ],$message);
-        $plan=Plan::find($id);
-        $plan->name = $request->name;
-        $plan->price = $request->price;
-         
+    public function update(Request $request, $id)
+    {
+        $plan = Plan::findOrFail($id);
+
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
+
+        $validate = \Validator::make($params_array, [
+            'name' => 'required',
+            'price' => 'required|integer',
+        ]);
+
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+
+        if (isset($params->name)) {
+            $plan->name = $params->name;
+        }
+
+        if (isset($params->price)) {
+            $plan->price = $params->price;
+        }
+
+        if (!$plan->isDirty()) {
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar',422);
+        } 
+
         $plan->save();
-    
-       // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('plan')->with('message', 'Modificado Satisfactoriamente !');
+
+        return $this->showOne($plan);
     }
 
     /**
@@ -101,8 +99,10 @@ class PlanController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id){
-        Plan::destroy($id);
-       return redirect('plan')->with('message', 'plan deleted!');
-   }
+    public function destroy($id)
+    {
+        $plan = Plan::findOrFail($id);
+        $plan->delete();
+        return $this->showOne($plan);
+    }
 }
