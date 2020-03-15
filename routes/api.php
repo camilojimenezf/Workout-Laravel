@@ -33,4 +33,10 @@ Route::resource('users.athletes', 'User\UserAthleteController', ['only' => ['ind
 
 /* Rutas para User-Profile */
 Route::resource('users.profiles', 'User\UserProfileController', ['only' => ['index']])->middleware('athleteCheck');
+/*Rutas Plans*/
+Route::resource('plans', 'PlanController');
+
+/* Rutas para trainings*/
+Route::resource('trainings', 'TrainingController');
+
 

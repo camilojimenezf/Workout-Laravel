@@ -4,28 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Training;
+use App\Http\Controllers\ApiController;
 
-class TrainingController extends Controller{
-    /**
+
+class TrainingController extends ApiController{
+    
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $trainings=Training::all();
-    
+        $trainings = Training::all();
         return $this->showAll($trainings);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('training.create') ;
     }
 
     /**
@@ -34,22 +26,24 @@ class TrainingController extends Controller{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
+        $json = $request->input('json', null);
+        $params_array = json_decode($json, true);
+
+        $validate = \Validator::make($params_array, [
             'title'=>'required',
             'description'=>'required',
-            'duration'=>'required',
-        ],$message);
-        
-        $training=new Training([
-            'title'=>$request->get('title'),
-            'description'=>$request->get('description'),
-            'duration'=>$request->get('duration'),
+            'duration'=>'required|integer',
         ]);
-        $training->save();
-       return redirect('/training')->with('message','Guardado Satisfactoriamente');
+        if ($validate->fails()) {
+            return $this->errorResponse('Error al validar los datos', 400);
+        }
+        
+        $trainings = Training::create($params_array);
+
+        return $this->showOne($trainer, 201);
     }
 
     /**
@@ -60,22 +54,12 @@ class TrainingController extends Controller{
      */
     public function show($id)
     {
-        //
+        $trainings = Training::findOrFail($id);
+        return $this->showOne($trainings);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $training = Training::find($id);
-        return view('training.edit',['training'=>$training]);
-    }
-
-    /**
+     * 
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -84,21 +68,40 @@ class TrainingController extends Controller{
      */
     public function update(Request $request, $id)
     {
-        $message=["required"=>'El: atribute es requerido'];
-        $request->validate([
+        $training=Training::findOrFail($id);
+
+        $json=$request->input('json',null);
+        $params=json_decode($json);
+        $params_array=json_decode($json,true);
+
+
+        $validate= \Validator::make($params_array,[
             'title'=>'required',
             'description'=>'required',
-            'duration'=>'required',
-        ],$message);
-        $training=Training::find($id);
-        $training->title = $request->title;
-        $training->description = $request->description;
-        $training->duration = $request->duration;
+            'duration'=>'required|integer',
+        ]);
+        if ($validate->fails()) {
+            return $this->errorResponse("Error al validar los datos",400);
+        }
+        
+        if (isset($params->title)) {
+            $training->title=$params->title;
+        }
+        if (isset($params->description)) {
+            $training->description=$params->description;
+        }
+        if (isset($params->duration)) {
+            $training->duration=$params->duration;
+        }
+
+        if (!$training->isDirty()) {
+            return $this->errorResponse("se debe especificar almenos un valor diferente para actualizar");
+        }
+
          
         $training->save();
-    
-       // Session::flash('message', 'Editado Satisfactoriamente !');
-        return redirect('training')->with('message', 'Modificado Satisfactoriamente !');
+        
+        return $this->showOne($training);
     }
 
     /**
@@ -109,7 +112,8 @@ class TrainingController extends Controller{
      */
     public function destroy($id)
     {
-        Training::destroy($id);
-        return redirect('training')->with('message', 'training deleted!');
+        $training = Training::findOrFail($id);
+        $training->delete();
+        return $this->showOne($training);
     }
 }
