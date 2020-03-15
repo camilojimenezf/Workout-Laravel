@@ -55,6 +55,9 @@ class AthleteController extends ApiController{
         if ($request->has('points')) {
             $athlete->points = $request->points;
         }
+        if (!$athlete->isDirty()) {
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar',422);
+        } 
        
         $athlete->save();
 
